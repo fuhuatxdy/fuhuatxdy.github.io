@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园里的烟火气——校园商业生态图</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/scrollama"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary: #5d9b9b;
+            --secondary: #d6a184;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --light-accent: #f0e6d8;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: 100% 100%;
+            opacity: 0.2;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 1rem auto 0;
+            position: relative;
+            z-index: 1;
+            opacity: 0.95;
+        }
+        
+        nav {
+            background: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .nav-link {
+            padding: 0.8rem 1.8rem;
+            margin: 0.3rem;
+            border-radius: 30px;
+            background: var(--light);
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .section-header h2 {
+            font-size: 2.4rem;
+            color: var(--dark);
+            display: inline-block;
+            padding: 0 1.5rem;
+            background: white;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            z-index: 0;
+        }
+        
+        .section-intro {
+            max-width: 800px;
+            margin: 0 auto 2.5rem;
+            font-size: 1.1rem;
+            text-align: center;
+            color: #555;
+            line-height: 1.8;
+        }
+        
+        .data-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .data-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.8rem;
+        }
+        
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-title {
+            font-size: 1.6rem;
+            color: var(--dark);
+            font-weight: 700;
+        }
+        
+        .card-subtitle {
+            font-size: 1.1rem;
+            color: #777;
+            margin-top: 0.3rem;
+        }
+        
+        .chart-container {
+            height: 400px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        
+        .flex-container {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .flex-container > div {
+            flex: 1;
+        }
+        
+        .comment-wall {
+            background: var(--light-accent);
+            border-radius: 10px;
+            padding: 1.5rem;
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            position: relative;
+            margin: 1.5rem 0;
+            border: 1px solid #e0d8c9;
+        }
+        
+        .comment-input-container {
+            display: flex;
+            margin-top: 1rem;
+        }
+        
+        .comment-input {
+            flex: 1;
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 30px 0 0 30px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .comment-input:focus {
+            border-color: var(--primary);
+        }
+        
+        .comment-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 0 30px 30px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .comment-btn:hover {
+            background: var(--secondary);
+        }
+        
+        .barrage {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin: 0.5rem;
+            animation: float 15s linear forwards;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #eee;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+        
+        .quote-box {
+            background: var(--light-accent);
+            border-left: 4px solid var(--secondary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            position: relative;
+        }
+        
+        .quote-box::before {
+            content: """;
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            font-size: 3rem;
+            color: var(--secondary);
+            opacity: 0.3;
+            font-family: Georgia, serif;
+        }
+        
+        .quote-author {
+            text-align: right;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-top: 0.8rem;
+        }
+        
+        #survival-simulator {
+            background: linear-gradient(135deg, #fff8f0 0%, #fff0e6 100%);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #f0e0d0;
+            margin-top: 1.5rem;
+        }
+        
+        .simulator-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .simulator-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .role-select {
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            min-width: 250px;
+        }
+        
+        .simulate-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .simulate-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .simulator-result {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1.5rem;
+            border-left: 5px solid var(--accent);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+        }
+        
+        .image-placeholder {
+            background: var(--light-accent);
+            border-radius: 10px;
+            height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-size: 1.1rem;
+            border: 2px dashed #d0c8b8;
+        }
+        
+        .image-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2.5rem;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .footer-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-text {
+            color: #ddd;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .copyright {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .flex-container {
+                flex-direction: column;
+            }
+            
+            .section {
+                padding: 3rem 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .simulator-controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <h1>校园里的烟火气</h1>
+        <div class="subtitle">校园周边商业生态图 - 数据驱动下的学生消费行为分析</div>
+    </header>
+    
+    <!-- 导航栏 -->
+    <nav>
+        <div class="nav-container">
+            <a href="#kfc-data" class="nav-link active"><i class="fas fa-chart-line"></i> KFC数据分析</a>
+            <a href="#cinema-analysis" class="nav-link"><i class="fas fa-film"></i> 影院生存现状</a>
+            <a href="#intro" class="nav-link active"><i class="fas fa-leaf"></i> 轻食市场分析</a>
+            <a href="#simulator" class="nav-link"><i class="fas fa-gamepad"></i> 生存模拟器</a>
+        </div>
+    </nav>
+    
+    <!-- KFC数据分析区块 -->
+    <section id="kfc-data" class="section">
+        <div class="section-header">
+            <h2>肯德基：疯狂星期四的流量密码</h2>
+            <div class="section-intro">
+                通过分析校园周边肯德基门店的销售数据，揭示学生消费行为的规律和特点，
+                探索"疯狂星期四"现象背后的商业逻辑和用户心理。
+            </div>
+        </div>
+        
+        <div class="data-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div>
+                    <div class="card-title">订单时段热力分布</div>
+                    <div class="card-subtitle">校园周边门店订单高峰时段分析</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="kfcChart"></canvas>
+            </div>
+            
+            <div class="flex-container">
+                <div>
+                    <div class="card-title">消费洞察</div>
+                    <ul style="padding-left: 1.5rem; margin-top: 1rem; line-height: 1.8;">
+                        <li>中午11:30--12:00为全天订单最高峰，学生下课集中用餐</li>
+                        <li>周四订单量比平日增加45%，"疯狂星期四"效应显著</li>
+                        <li>20:00后订单仍占全天20%，夜宵需求旺盛</li>
+                        <li>早餐时段订单集中在7:00-8:00，上课前快速消费</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="card-title">热门单品TOP5</div>
+                    <div style="margin-top: 1rem;">
+                        <div style="display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid #eee;">
+                            <span>香辣鸡腿堡套餐</span>
+                            <span>32.5%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid #eee;">
+                            <span>黄金鸡块（10块装）</span>
+                            <span>24.7%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid #eee;">
+                            <span>葡式蛋挞（4只装）</span>
+                            <span>18.3%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid #eee;">
+                            <span>奥尔良烤翅</span>
+                            <span>15.6%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.8rem 0;">
+                            <span>土豆泥</span>
+                            <span>9.2%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="data-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-comment-alt"></i>
+                </div>
+                <div>
+                    <div class="card-title">学生真实吐槽</div>
+                    <div class="card-subtitle">弹幕模式 - 分享你的消费体验</div>
+                </div>
+            </div>
+            
+            <div class="comment-wall" id="comment-wall">
+                <!-- 弹幕评论会动态添加到这里 -->
+            </div>
+            
+            <div class="comment-input-container">
+                <input type="text" class="comment-input" placeholder="输入你的吐槽..." id="comment-input">
+                <button class="comment-btn">发送</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 影院分析区块 -->
+    <section id="cinema-analysis" class="section">
+        <div class="section-header">
+            <h2>电影院：为何门可罗雀？</h2>
+            <div class="section-intro">
+                校园周边影院面临严峻挑战，通过上座率、票价和用户调研数据，
+                分析影院经营困境的原因及可能的转型方向。
+            </div>
+        </div>
+        
+        <div class="data-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+                <div>
+                    <div class="card-title">上座率与票价分析</div>
+                    <div class="card-subtitle">近半年影院经营数据变化趋势</div>
+                </div>
+            </div>
+            
+            <div class="flex-container">
+                <div>
+                    <div class="chart-container">
+                        <canvas id="attendanceChart"></canvas>
+                    </div>
+                </div>
+                <div>
+                   <div class="image-placeholder" style="background-image: url('https://i.hd-r.icu/340655eb766a56a382afc14ed55a8bb3.jpg'); background-size: cover; background-position: center;">
+    <div style="text-align: center; background-color: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px;">
+        <div style="color: white; font-weight: bold;">空荡荡的电影院</div>
+    </div>
+</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quote-box">
+                "一张票够吃两顿食堂，约会不如去奶茶店打游戏。现在电影院最大的问题是价格高、体验差，而且片源和流媒体几乎同步，为什么要花这个钱？"
+                <div class="quote-author">—— 大二学生访谈</div>
+            </div>
+        </div>
+        
+        <div class="data-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <div>
+                    <div class="card-title">转型方向探索</div>
+                    <div class="card-subtitle">基于学生需求的影院升级方案</div>
+                </div>
+            </div>
+            
+            <div class="flex-container">
+                <div>
+                    <h3 style="color: var(--primary); margin-bottom: 1rem;">学生期望的影院服务</h3>
+                    <ul style="padding-left: 1.5rem; line-height: 1.8;">
+                        <li>学生专属票价（现价50%折扣）</li>
+                        <li>增设自习区域和免费WiFi</li>
+                        <li>引入桌游、剧本杀等社交活动</li>
+                        <li>提供小吃饮料套餐优惠</li>
+                        <li>经典老片重映专题</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-bottom: 1rem;">潜在合作模式</h3>
+                    <ul style="padding-left: 1.5rem; line-height: 1.8;">
+                        <li>与学校社团联合举办观影活动</li>
+                        <li>开设电影鉴赏选修课</li>
+                        <li>期末复习周通宵自习室</li>
+                        <li>情侣专属双人套餐</li>
+                        <li>主题影厅（如动漫、科幻专场）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+ <!-- 轻食市场分析 -->
+    <section id="intro" class="section">
+        <div class="section-header">
+            <h2>校园轻食市场崛起</h2>
+            <div class="section-intro">
+                健康饮食理念在校园中的普及推动了轻食市场的快速发展，以"小拌同学"为代表的轻食店
+                通过精准定位和多因素联动，成功占领了校园健康餐饮市场。
+            </div>
+        </div>
+        
+        <div class="data-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-apple-alt"></i>
+                </div>
+                <div>
+                    <div class="card-title">轻食消费趋势分析</div>
+                    <div class="card-subtitle">校园健康餐饮市场调研报告</div>
+                </div>
+            </div>
+            
+            <div class="flex-container">
+                <div>
+                    <h3 style="color: var(--primary); margin-bottom: 1.5rem;">学生轻食消费动机</h3>
+                    <ul style="padding-left: 1.5rem; line-height: 1.8;">
+                        <li><strong>健康需求</strong>：78%的学生关注食品营养和健康</li>
+                        <li><strong>体重管理</strong>：65%的女生有控制体重的需求</li>
+                        <li><strong>气候因素</strong>：三亚炎热气候促进清爽饮食需求</li>
+                        <li><strong>食堂替代</strong>：传统食堂油腻，寻求清淡选择</li>
+                        <li><strong>便捷性</strong>：即买即走，适合学生快节奏生活</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-bottom: 1.5rem;">"小拌同学"竞争优势</h3>
+                    <ul style="padding-left: 1.5rem; line-height: 1.8;">
+                        <li><strong>产品多样性</strong>：20+种凉菜组合，每周更新菜单</li>
+                        <li><strong>价格策略</strong>：15-25元主流定价，学生可接受</li>
+                        <li><strong>包装设计</strong>：环保餐盒，便携易食</li>
+                        <li><strong>快速服务</strong>：平均等待时间3分钟</li>
+                        <li><strong>健康理念</strong>：标注每份餐食卡路里和营养成分</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 思维导图区块 -->
+    <section id="mindmap" class="section">
+        <div class="section-header">
+            <h2>"小拌同学"成功模式思维导图</h2>
+            <div class="section-intro">
+                动态展示轻食店成功的多因素联动效应，点击"播放动画"按钮查看完整分析
+            </div>
+        </div>
+        
+        <div class="data-card">
+            <div class="controls">
+                <button class="control-btn" id="playBtn">
+                    <i class="fas fa-play"></i> 播放动画
+                </button>
+                <button class="control-btn" id="resetBtn">
+                    <i class="fas fa-sync-alt"></i> 重置动画
+                </button>
+            </div>
+            
+            <div class="mindmap-container">
+                <div class="central-node floating">
+                    <i class="fas fa-seedling"></i>
+                    <div>小拌同学成功因素</div>
+                </div>
+                
+                <!-- 节点将通过JavaScript动态添加 -->
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <i class="fas fa-thermometer-three-quarters fa-2x" style="color: var(--accent);"></i>
+                    <div class="stat-value">78%</div>
+                    <div class="stat-title">因天气炎热选择轻食</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-venus fa-2x" style="color: var(--primary);"></i>
+                    <div class="stat-value">85%</div>
+                    <div class="stat-title">女性消费者占比</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-utensils fa-2x" style="color: var(--secondary);"></i>
+                    <div class="stat-value">22种</div>
+                    <div class="stat-title">可选凉菜组合</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-wallet fa-2x" style="color: var(--dark);"></i>
+                    <div class="stat-value">¥15-25</div>
+                    <div class="stat-title">主力价格区间</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 交互模块：生存模拟器 -->
+    <section id="simulator" class="section">
+        <div class="section-header">
+            <h2>校园商业生存模拟器</h2>
+            <div class="section-intro">
+                体验不同商业角色在校园环境中的经营挑战，探索校园商业的生存之道。
+            </div>
+        </div>
+        
+        <div class="data-card">
+            <div id="survival-simulator">
+                <div class="simulator-header">
+                    <h3 style="font-size: 1.8rem; color: var(--dark);">你会如何经营校园生意？</h3>
+                    <p style="color: #777; margin-top: 0.5rem;">选择角色开始模拟经营挑战</p>
+                </div>
+                
+                <div class="simulator-controls">
+                    <select id="role-select" class="role-select">
+                        <option value="kfc">KFC门店经理</option>
+                        <option value="cinema">影院运营总监</option>
+                        <option value="bubbletea">轻食店老板</option>
+                    </select>
+                    
+                    <button class="simulate-btn" onclick="runSimulation()">
+                        <i class="fas fa-play"></i> 开始模拟
+                    </button>
+                </div>
+                
+                <div id="result" class="simulator-result">
+                    请选择角色并点击"开始模拟"
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-title">校园商业生态研究项目</div>
+            <div class="footer-text">
+                本报告基于2024年9月至2025年2月对三亚学院商业生态的调研数据，
+                涵盖餐饮、娱乐、零售等多个领域。
+            </div>
+            <div class="footer-text">
+                数据来源：校园消费行为调查、商家销售数据、实地访谈
+            </div>
+            <div class="copyright">
+                © 融合新闻学 | 设计：三亚学院
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // KFC数据图表
+        const kfcCtx = document.getElementById('kfcChart').getContext('2d');
+        const kfcChart = new Chart(kfcCtx, {
+            type: 'bar',
+            data: {
+                labels: ['7:00', '10:00', '11:30', '17:40', '20:00'],
+                datasets: [{
+                    label: '订单量（单/小时）',
+                    data: [48, 60, 140, 80, 30],
+                    backgroundColor: '#5d9b9b',
+                    borderColor: '#4a7c7c',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '订单数量'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: '时间段'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: '校园周边KFC各时段订单量'
+                    }
+                }
+            }
+        });
+        
+        // 影院上座率图表
+        const attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
+        const attendanceChart = new Chart(attendanceCtx, {
+            type: 'line',
+            data: {
+                labels: ['9月', '10月', '11月', '12月', '1月', '2月'],
+                datasets: [
+                    {
+                        label: '上座率（%）',
+                        data: [45, 38, 32, 28, 22, 18],
+                        borderColor: '#d6a184',
+                        backgroundColor: 'rgba(214, 161, 132, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: '平均票价（元）',
+                        data: [48, 50, 52, 55, 58, 60],
+                        borderColor: '#5d9b9b',
+                        backgroundColor: 'rgba(93, 155, 155, 0.1)',
+                        borderWidth: 3,
+                        borderDash: [5, 5],
+                        tension: 0.3,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 0,
+                        title: {
+                            display: true,
+                            text: '百分比 / 价格'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: '影院上座率与票价变化趋势'
+                    }
+                }
+            }
+        });
+        
+        // 弹幕功能
+        const commentInput = document.getElementById('comment-input');
+        const commentWall = document.getElementById('comment-wall');
+        
+        // 预置评论
+        const presetComments = [
+            "疯狂星期四真的划算吗？感觉分量变少了！",
+            "KFC早餐的粥不错，就是排队太久",
+            "周四的鸡块永远抢不到，太离谱了",
+            "学生证可以打折吗？好像从来没问过",
+            "配送费越来越贵，不如去店里吃",
+            "新品汉堡踩雷了，还是经典款靠谱",
+            "为什么APP和门店优惠不一样？",
+            "周四的优惠券越来越难用了",
+            "建议提前点餐，下课去拿刚好",
+            "蛋挞永远的神！买四送二最划算"
+        ];
+        
+        // 初始化预置弹幕
+        presetComments.forEach(comment => {
+            addBarrage(comment);
+        });
+        
+        // 添加弹幕函数
+        function addBarrage(text) {
+            if (!text.trim()) return;
+            
+            const barrage = document.createElement('div');
+            barrage.className = 'barrage';
+            barrage.textContent = text;
+            commentWall.appendChild(barrage);
+            
+            // 随机位置
+            const top = Math.floor(Math.random() * 80);
+            barrage.style.top = `${top}%`;
+            
+            // 动画结束后移除元素
+            barrage.addEventListener('animationend', () => {
+                barrage.remove();
+            });
+        }
+        
+        // 用户输入评论
+        commentInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') {
+                addBarrage(e.target.value);
+                e.target.value = '';
+            }
+        });
+        
+        // 按钮发送评论
+        document.querySelector('.comment-btn').addEventListener('click', () => {
+            addBarrage(commentInput.value);
+            commentInput.value = '';
+        });
+        
+        // 自动生成弹幕（模拟用户）
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                const randomComment = presetComments[Math.floor(Math.random() * presetComments.length)];
+                addBarrage(randomComment);
+            }
+        }, 5000);
+
+        // 思维导图节点数据
+        const mindmapData = [
+            {
+                id: 'climate',
+                title: '气候因素',
+                desc: '三亚全年炎热',
+                icon: 'fas fa-sun',
+                position: { top: '15%', left: '50%' },
+                color: '#FF9800'
+            },
+            {
+                id: 'canteen',
+                title: '食堂问题',
+                desc: '传统食堂油腻',
+                icon: 'fas fa-utensils',
+                position: { top: '25%', left: '20%' },
+                color: '#E91E63'
+            },
+            {
+                id: 'variety',
+                title: '菜品多样',
+                desc: '20+种凉菜选择',
+                icon: 'fas fa-apple-alt',
+                position: { top: '25%', left: '80%' },
+                color: '#4CAF50'
+            },
+            {
+                id: 'health',
+                title: '健康需求',
+                desc: '女生减肥心理',
+                icon: 'fas fa-heartbeat',
+                position: { top: '50%', left: '10%' },
+                color: '#9C27B0'
+            },
+            {
+                id: 'price',
+                title: '定价策略',
+                desc: '15-25元适中',
+                icon: 'fas fa-tag',
+                position: { top: '50%', left: '90%' },
+                color: '#2196F3'
+            },
+            {
+                id: 'packaging',
+                title: '包装便利',
+                desc: '便携环保餐盒',
+                icon: 'fas fa-box-open',
+                position: { top: '75%', left: '50%' },
+                color: '#795548'
+            },
+            {
+                id: 'service',
+                title: '快速服务',
+                desc: '平均3分钟出餐',
+                icon: 'fas fa-stopwatch',
+                position: { top: '85%', left: '25%' },
+                color: '#3F51B5'
+            },
+            {
+                id: 'location',
+                title: '黄金位置',
+                desc: '女生宿舍楼下',
+                icon: 'fas fa-map-marker-alt',
+                position: { top: '85%', left: '75%' },
+                color: '#00BCD4'
+            }
+        ];
+
+        // 获取容器
+        const mindmapContainer = document.querySelector('.mindmap-container');
+        const playBtn = document.getElementById('playBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // 创建节点和连接线
+        function createMindmap() {
+            // 创建节点
+            mindmapData.forEach(nodeData => {
+                const node = document.createElement('div');
+                node.className = 'node';
+                node.id = nodeData.id;
+                node.innerHTML = `
+                    <i class="${nodeData.icon}"></i>
+                    <div class="node-title">${nodeData.title}</div>
+                    <div class="node-desc">${nodeData.desc}</div>
+                `;
+                node.style.top = nodeData.position.top;
+                node.style.left = nodeData.position.left;
+                node.style.borderTop = `4px solid ${nodeData.color}`;
+                mindmapContainer.appendChild(node);
+            });
+        }
+
+        // 动画播放函数
+        function playAnimation() {
+            // 重置所有节点状态
+            document.querySelectorAll('.node').forEach(node => {
+                node.style.opacity = '0';
+                node.style.transform = 'scale(0.8)';
+            });
+            
+            // 播放动画
+            let delay = 0;
+            mindmapData.forEach(nodeData => {
+                setTimeout(() => {
+                    const node = document.getElementById(nodeData.id);
+                    node.style.opacity = '1';
+                    node.style.transform = 'scale(1)';
+                    node.style.transition = 'all 0.8s ease-out';
+                    
+                    // 创建连接线
+                    const line = document.createElement('div');
+                    line.className = 'connection';
+                    line.style.backgroundColor = nodeData.color;
+                    line.style.width = '0';
+                    line.style.height = '4px';
+                    line.style.opacity = '1';
+                    
+                    // 计算中央节点和当前节点的位置
+                    const centerX = mindmapContainer.offsetWidth / 2;
+                    const centerY = mindmapContainer.offsetHeight / 2;
+                    const nodeRect = node.getBoundingClientRect();
+                    const containerRect = mindmapContainer.getBoundingClientRect();
+                    
+                    const nodeX = nodeRect.left - containerRect.left + nodeRect.width / 2;
+                    const nodeY = nodeRect.top - containerRect.top + nodeRect.height / 2;
+                    
+                    // 计算距离和角度
+                    const dx = nodeX - centerX;
+                    const dy = nodeY - centerY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                    
+                    // 设置连接线样式
+                    line.style.width = `${distance}px`;
+                    line.style.transform = `rotate(${angle}deg)`;
+                    line.style.left = `${centerX}px`;
+                    line.style.top = `${centerY}px`;
+                    
+                    mindmapContainer.appendChild(line);
+                    
+                    // 连接线动画
+                    setTimeout(() => {
+                        line.style.width = `${distance}px`;
+                    }, 100);
+                    
+                }, delay);
+                
+                delay += 600; // 每个节点延迟0.6秒出现
+            });
+            
+            // 禁用播放按钮
+            playBtn.disabled = true;
+            playBtn.innerHTML = '<i class="fas fa-play"></i> 播放中...';
+            playBtn.style.opacity = '0.7';
+        }
+
+        // 重置动画
+        function resetAnimation() {
+            // 移除所有连接线
+            document.querySelectorAll('.connection').forEach(line => {
+                line.remove();
+            });
+            
+            // 重置节点状态
+            document.querySelectorAll('.node').forEach(node => {
+                node.style.opacity = '0';
+                node.style.transform = 'scale(0.8)';
+            });
+            
+            // 启用播放按钮
+            playBtn.disabled = false;
+            playBtn.innerHTML = '<i class="fas fa-play"></i> 播放动画';
+            playBtn.style.opacity = '1';
+        }
+
+        // 初始化思维导图
+        createMindmap();
+
+        // 事件监听
+        playBtn.addEventListener('click', playAnimation);
+        resetBtn.addEventListener('click', resetAnimation);
+        
+        // 添加悬停效果
+        document.querySelectorAll('.node').forEach(node => {
+            node.addEventListener('mouseenter', function() {
+                this.style.zIndex = '20';
+                this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+            });
+            
+            node.addEventListener('mouseleave', function() {
+                this.style.zIndex = '5';
+                this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+            });
+        });
+
+        
+        // 生存模拟器逻辑
+        function runSimulation() {
+            const role = document.getElementById('role-select').value;
+            const results = {
+                kfc: "🔴 周四崩溃！3小时处理200单，建议：提前预制汉堡，增设取餐窗口",
+                cinema: "⚫ 濒临倒闭！上座率不足20%，建议转型：私人影院+桌游吧+自习空间",
+                bubbletea: "🟠 推陈出新！根据气候调整菜品，建议：融入地方特色食材和口味，蛋白质+蔬菜+健康碳水科学配比",
+            };
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<h3>${results[role]}</h3>`;
+            resultDiv.style.animation = "none";
+            setTimeout(() => {
+                resultDiv.style.animation = "pulse 0.8s";
+            }, 10);
+        }
+        
+        // 导航联动
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.section');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes pulse {
+                0% { transform: scale(0.95); opacity: 0.7; }
+                50% { transform: scale(1.02); opacity: 1; }
+                100% { transform: scale(1); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
